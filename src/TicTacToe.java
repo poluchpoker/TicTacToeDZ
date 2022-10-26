@@ -9,19 +9,21 @@ public class TicTacToe {
     public static Scanner inp = new Scanner(System.in);
     public static Random rand = new Random();
 
-    int countCellX = 0; int countCellO = 0; int countFreeCell = 0;
-    int countLine = 0; int countColumn = 0; int running = 0;
+    int countCellX = 0; int countCellO = 0; int countFreeCell = 0; //счетчики клеток X, O, а также пустые
+    int countLine = 0; int countColumn = 0; int running = 0; //счетчики линий, столбцов и для прогона
 
     public static void main(String[] args) {
         new TicTacToe().game();
     }
 
+    // создание игрового поля
     TicTacToe(){
         table = new char[5][5];
 
         this.initTable();
     }
 
+    //сама игра и весь движ
     void game(){
         while (true) {
             this.humanTurn();
@@ -55,6 +57,7 @@ public class TicTacToe {
         this.printTable();
     }
 
+    //заполнение таблички символами "#"
     void initTable(){
         for (int line = 0; line < 5; line++){
             for (int column = 0; column < 5; column++){
@@ -63,6 +66,7 @@ public class TicTacToe {
         }
     }
 
+    //вывод игрового поля
     void printTable(){
         for (int line = 0; line < 5; line++){
             for (int column = 0; column < 5; column++){
@@ -72,6 +76,7 @@ public class TicTacToe {
         }
     }
 
+    //проверка на заполненность таблички, для того, чтобы узнать когда ничья
     boolean isFullTable(){
         for (int line = 0; line < 5; line++){
             for (int column = 0; column < 5; column++){
@@ -82,22 +87,20 @@ public class TicTacToe {
         return true;
     }
 
+    //метод, содержащий цикл для чтения с клавы
     int getNum(){
         int trying;
-        String symbol;
 
         while (true){
             if (inp.hasNext()){
                 trying = inp.nextInt();
                 break;
-            }else{
-                symbol = inp.next();
-                System.out.println("Введены невереные символы" + symbol);
             }
         }
         return trying;
     }
 
+    //ход людишки
     void humanTurn(){
         int x, y;
         do{
@@ -109,6 +112,7 @@ public class TicTacToe {
         table[y][x] = DOT_X;
     }
 
+    //ход компа
     void aiTurn(){
         if (this.check1Dig()) return;
 
@@ -129,6 +133,7 @@ public class TicTacToe {
         this.randomWalk();
     }
 
+    //чекаем диапазончик челебоса
     boolean isCellValidHuman(int x, int y){
         if (x < 0 || x > 4 || y < 0 || y > 4){
             System.out.println("Вы вышли из диапазона (1..5)");
@@ -143,12 +148,14 @@ public class TicTacToe {
         return true;
     }
 
+    //чекаем диапазончик компа
     boolean isCellValidAI(int x, int y){
         if (x < 0 || x > 4 || y < 0 || y > 4) return false;
 
         return this.table[y][x] == DOT_EMPTY;
     }
 
+    //считаем наши X, O и пустые клетки
     void count(int line, int column){
         if (this.table[line][column] == DOT_X) countCellX++;
 
@@ -157,20 +164,24 @@ public class TicTacToe {
         if (this.table[line][column] == DOT_EMPTY) countFreeCell++;
     }
 
+    //инициализируем наши счетчики
     void initCount(){
         this.countCellX = 0;
         this.countCellO = 0;
         this.countFreeCell = 0;
     }
 
+    //бот почти проиграл
     boolean isLosingForAI(){
         return (this.countFreeCell == 2 && this.countCellX == 3 || this.countFreeCell == 1 && this.countCellX == 3);
     }
 
+    //бот почти выиграл
     boolean isWining(){
         return (this.countFreeCell == 2 && this.countCellO == 3 || this.countFreeCell == 1 && this.countCellO == 3);
     }
 
+    //проверка на победку
     boolean checkWin(char dot){
         for (int element_line = 0; element_line < 5; element_line++){
             for (int element_column = 0; element_column < 4; element_column++){
@@ -211,6 +222,7 @@ public class TicTacToe {
                 (table[1][3] == dot && table[2][2] == dot && table[3][1] == dot && table[4][0] == dot);
     }
 
+    //рандомим ходьбу боту
     void randomWalk(){
         int x, y;
         do{
@@ -221,6 +233,7 @@ public class TicTacToe {
         this.table[y][x] = DOT_O;
     }
 
+    //бот ставит O вместо "#"
     boolean putO(int line, int column){
         if (this.table[line][column] == DOT_EMPTY){
             this.table[line][column] = DOT_O;
@@ -230,6 +243,9 @@ public class TicTacToe {
         return false;
     }
 
+    /*проверяем, если мы можем победить по ГЛАВНОЙ диагонали, то бот нам не даст этого сделать, при условии, если мы не
+    начнем заполнять с центра, тк бот перекроет только 1 сторону, в другую нас ждет вин
+   */
     boolean check1Dig(){
         this.initCount();
         for (int line = 0; line < 5; line++){
@@ -245,6 +261,9 @@ public class TicTacToe {
         return false;
     }
 
+    /*проверяем, если мы можем победить по ПОБОЧНОЙ диагонали, то бот нам не даст этого сделать, при условии, если мы не
+    начнем заполнять с центра, тк бот перекроет только 1 сторону, в другую нас ждет вин
+   */
     boolean check2Diagonal() {
         this.initCount();
         int column = 4;
@@ -264,6 +283,8 @@ public class TicTacToe {
         return false;
     }
 
+    /*проверяем, если мы можем победить по побочной диагонали от главной, то бот нам не даст этого сделать, при условии,
+    если мы не начнем заполнять с центра, тк бот перекроет только 1 сторону, в другую нас ждет вин(остальные аналогично)*/
     boolean check3Diagonal() {
         this.initCount();
         int column = 1;
@@ -340,6 +361,9 @@ public class TicTacToe {
         return false;
     }
 
+    /*проверяем, если мы можем победить по гор-ой линии, то бот нам не даст этого сделать, при условии, если мы не
+    начнем заполнять с центра, тк бот перекроет только 1 сторону, в другую нас ждет вин
+   */
     boolean checkLines() {
         for (int line = 0; line < 5; line++){
             this.initCount();
@@ -356,6 +380,9 @@ public class TicTacToe {
         return false;
     }
 
+    /*проверяем, если мы можем победить по столбцу, то бот нам не даст этого сделать, при условии, если мы не
+    начнем заполнять с центра, тк бот перекроет только 1 сторону, в другую нас ждет вин
+   */
     boolean checkColumns() {
         for (int columns = 0; columns < 5; columns++) {
             this.initCount();
