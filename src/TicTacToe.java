@@ -34,7 +34,7 @@ public class TicTacToe {
             }
 
             if (this.isFullTable()){
-                System.out.println("Таблица заполнена полностью!");
+                System.out.println("Ничья с ботом)000)00))00 (ботик)");
                 break;
             }
 
@@ -47,7 +47,7 @@ public class TicTacToe {
             }
 
             if (this.isFullTable()){
-                System.out.println("Таблица заполнена полностью!");
+                System.out.println("Ничья с ботом0))000 (ботик)");
                 break;
             }
 
