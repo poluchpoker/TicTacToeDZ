@@ -173,7 +173,8 @@ public class TicTacToe {
 
     //бот почти проиграл
     boolean isLosingForAI(){
-        return (this.countFreeCell == 2 && this.countCellX == 3 || this.countFreeCell == 1 && this.countCellX == 3);
+        return (this.countFreeCell == 2 && this.countCellX == 3 || this.countFreeCell == 1 && this.countCellX == 3 ||
+                this.countFreeCell == 3 && this.countCellX == 2);
     }
 
     //бот почти выиграл
@@ -373,8 +374,16 @@ public class TicTacToe {
 
             if (this.isWining() || this.isLosingForAI()) {
                 for (int column = 0; column < 4; column++) {
-                    if (this.table[line][column] != this.table[line][column + 1])
-                        if (this.putO(line,column)) return true;
+                    if ((this.table[line][column] == this.table[line][column + 1] && this.table[line][0] == DOT_X) ||
+                            (this.table[line][column] == this.table[line][column + 1] && this.table[line][1] == DOT_X)){
+                        if (this.putO(line, column)) return true;
+                    } else if (((this.table[line][column] != this.table[line][column + 1])  ||
+                            ((this.table[line][2] == DOT_X && this.table[line][3] == DOT_X) ||
+                                    (this.table[line][3] == DOT_X && this.table[line][4] == DOT_X)))){
+                        if (this.table[line][column] == DOT_X){
+                            if (this.putO(line, column + 1)) return true;
+                        }else if (this.putO(line, column)) return true;
+                    }
                 }
             }
         }
@@ -393,8 +402,15 @@ public class TicTacToe {
 
             if (this.isWining() || this.isLosingForAI()) {
                 for (int line = 0; line < 4; line++) {
-                    if (this.table[line][column] != this.table[line + 1][column]){
+                    if ((this.table[line][column] == this.table[line + 1][column] && this.table[0][column] == DOT_X) ||
+                            (this.table[line][column] == this.table[line + 1][column] && this.table[1][column] == DOT_X)){
                         if (this.putO(line, column)) return true;
+                    }else if ((this.table[line][column] != this.table[line + 1][column])  ||
+                            ((this.table[2][column] == DOT_X && this.table[3][column] == DOT_X) ||
+                                    (this.table[3][column] == DOT_X && this.table[4][column] == DOT_X))) {
+                        if (this.table[line][column] == DOT_X) {
+                            if (this.putO(line + 1, column)) return true;
+                        } else if (this.putO(line, column)) return true;
                     }
                 }
             }
