@@ -372,8 +372,9 @@ public class TicTacToe {
             }
 
             if (this.isWining() || this.isLosingForAI()) {
-                for (int column = 0; column < 5; column++) {
-                    if (this.putO(line,column)) return true;
+                for (int column = 0; column < 4; column++) {
+                    if (this.table[line][column] != this.table[line][column + 1])
+                        if (this.putO(line,column)) return true;
                 }
             }
         }
@@ -384,15 +385,17 @@ public class TicTacToe {
     начнем заполнять с центра, тк бот перекроет только 1 сторону, в другую нас ждет вин
    */
     boolean checkColumns() {
-        for (int columns = 0; columns < 5; columns++) {
+        for (int column = 0; column < 5; column++) {
             this.initCount();
             for (int line = 0; line < 5; line++) {
-                this.count(line, columns);
+                this.count(line, column);
             }
 
             if (this.isWining() || this.isLosingForAI()) {
-                for (int line = 0; line < 5; line++) {
-                    if (this.putO(line, columns)) return true;
+                for (int line = 0; line < 4; line++) {
+                    if (this.table[line][column] != this.table[line + 1][column]){
+                        if (this.putO(line, column)) return true;
+                    }
                 }
             }
         }
